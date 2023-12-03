@@ -1,13 +1,8 @@
 
 def main():
-
-    MAX_RED = 12
-    MAX_GREEN = 13
-    MAX_BLUE = 14
-
     with open("./input.txt") as f:
         games = f.readlines()
-        possible_games = 0
+        sum_of_powers = 0
 
         for game in games:
             parsed = game.split(":")
@@ -15,29 +10,32 @@ def main():
             game_num = parsed[0]
             game_num = int(game_num.split(" ")[1])
 
-            rounds = parsed[1].strip()
-            rounds = rounds.split(";")
-            is_good_game = True
-            for round in rounds:
-                rolls = round.split(", ")
-                for roll in rolls:
-                    roll = roll.strip()
-                    amount = int(roll.split(" ")[0])
+            rolls = parsed[1].strip()
+            rolls = rolls.replace(";", ",")
+            rolls = rolls.split(",")
 
-                    if "red" in roll:
-                        if amount > MAX_RED:
-                            is_good_game = False
-                    elif "green" in roll:
-                        if amount > MAX_GREEN:
-                            is_good_game = False
-                    elif "blue" in roll:
-                        if amount > MAX_BLUE:
-                            is_good_game = False
+            reds = []
+            greens = []
+            blues = []
+            for roll in rolls:
+                roll = roll.strip()
+                amount = int(roll.split(" ")[0])
 
-            if is_good_game:
-                possible_games += game_num
+                if "red" in roll:
+                    reds.append(amount)
+                elif "green" in roll:
+                    greens.append(amount)
+                elif "blue" in roll:
+                    blues.append(amount)
 
-        print(possible_games)
+            min_red = max(reds)
+            min_green = max(greens)
+            min_blue = max(blues)
+
+            sum_of_powers += min_red * min_green * min_blue
+            
+        print(sum_of_powers)
+
         f.close()
 
 if __name__ == "__main__":
